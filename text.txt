@@ -1,0 +1,10 @@
+Implementar uma rede neural com 3 camadas para ser usada com um
+conjunto de dados (treinamento.csv) e (teste.csv)
+
+-Usar pesos aleatórios, mas permitir que o usuário insira valores a pesos desejados.
+-Funções de transferência - Logística e Tang. Hiperbólica.
+-No final do teste, apresentar uma matriz de confusão.
+
+O programa deverá abrir os dados, descobrir quantos atributos e quantas classes existem.
+Programa deverá calcular o numero de neurônios em cada classe, porém para a
+classe oculta, o usuário poderá inserir uma quantidade de sua preferência.
