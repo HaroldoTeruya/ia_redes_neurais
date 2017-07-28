@@ -1,7 +1,8 @@
 /*
  * Created 20.07.2017 at 17:45 by Haroldo Shigueaki Teruya.
- *
- * Require: JQuery and DataBase.js. 
+ * 
+ * v1.4.
+ * Require: JQuery and DataBase.js.
  *
  * This file is responsible to:
  * - control the interface.
