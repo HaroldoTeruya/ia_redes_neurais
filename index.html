@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8" />
@@ -11,9 +11,9 @@
 	<body class="main-body">
 
 		<nav class="navbar navbar-default">
-			<div class="container-fluid">
+			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">TRABALHO 2</a>
+					<a class="navbar-brand" href="#">ARTIFICIAL INTELLIGENCE - WORK 2</a>
 				</div>
 			</div>
 		</nav>
@@ -21,7 +21,19 @@
 		<div class="container">
 
 			<div class="">
-				<input type="file" id="file-input" />
+				<h3>Fucntion that wil be used:</h3>
+				<form>
+					<div class="radio">
+						<label><input id="radio-logistic-input" type="radio" name="optradio" checked>Logistic</label>
+					</div>
+					<div class="radio">
+						<label><input type="radio" name="optradio">Hyperbolic Tangent</label>
+					</div>
+				</form>
+			</div>
+
+			<div class="">
+				<input type="file" id="file-input">
 			</div>
 
 			<div class="">
@@ -40,6 +52,33 @@
 			<hr>
 
 			<div class="">
+				<h3>Hidden Layer <button style="margin-bottom: 10px" id="add-hidden-node-button" class="btn btn-success" type="button" name="button">+</button></h3>
+				<div class="row" id="hidden-layer-list">
+
+					<!-- <div class='col-sm-3'>
+						<div class='text-center well well-sm form-group'>
+							<button onclick="removeHiddenNode(this)" type="button" class="close" aria-label="Close">
+  							<span aria-hidden="true">&times;</span>
+							</button>
+							<h5>" + _hiddenNodeIndex + "</h5>
+							<input style='width: 100%' type='number' name='' value='" + weight + "'>
+						</div>
+					</div> -->
+
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="">
+				<h3>Output layer</h3>
+				<div class="row" id="output-layer-list">
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="">
 				<h3>Contents of the file:</h3>
 				<pre id="file-content"></pre>
 			</div>
@@ -51,6 +90,7 @@
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/DataBase.js"></script>
 		<script type="text/javascript" src="js/script.js"></script>
+		<script type="text/javascript" src="js/algorithm.js"></script>
 
 	</body>
 </html>

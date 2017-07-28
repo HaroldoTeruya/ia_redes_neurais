@@ -8,3 +8,8 @@ conjunto de dados (treinamento.csv) e (teste.csv)
 O programa deverá abrir os dados, descobrir quantos atributos e quantas classes existem.
 Programa deverá calcular o numero de neurônios em cada classe, porém para a
 classe oculta, o usuário poderá inserir uma quantidade de sua preferência.
+
+
+Deve ser completamente conectado?
+Quantos nós de saída?
+Quantos nós na saída?

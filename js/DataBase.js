@@ -39,8 +39,7 @@ function InputData()
 		return this.entryNameList;
 	}
 	this.setEntryNameList = function(entryNameList)
-	{
-		console.log(entryNameList);
+	{		
 		this.entryNameList = entryNameList;
 	}
 }
