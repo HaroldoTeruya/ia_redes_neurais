@@ -1,6 +1,6 @@
 /*
  * Created 20.07.2017 at 17:45 by Haroldo Shigueaki Teruya.
- * 
+ *
  * v1.4.
  * Require: JQuery and DataBase.js.
  *
@@ -21,6 +21,12 @@
 document.getElementById('file-input').addEventListener('change', readFile, false);
 
 /*
+ * Event triggers when the "Escolher arquivo" is clicked.
+ * Invoke 'readFileTest' function.
+ */
+document.getElementById('file-test').addEventListener('change', readFileTest, false);
+
+/*
  * Event triggers when the "+" is clicked.
  * Invoke 'addHNodeidden' function.
  */
@@ -30,8 +36,8 @@ document.getElementById('add-hidden-node-button').addEventListener('click', addH
 // GLOBAL VARIABLES ====================================================================================================
 // =====================================================================================================================
 
-// used to give a name to the hidden node when create.
-var _hiddenNodeIndex = 0;
+var _allEntryList = null;
+var _testData = null;
 
 // =====================================================================================================================
 // FUNCTIONS ===========================================================================================================
@@ -51,6 +57,7 @@ function readFile(e)
     var contents = e.target.result;
     var element = null;
     inputData = parse(contents);
+    _allEntryList = inputData;
 
     $('#entry-list').html('');
     $('#hidden-layer-list').html('');
@@ -66,10 +73,35 @@ function readFile(e)
     for( var i = 0; i < inputData.getEntryNameList().length; i++ )
     {
       addEntry(inputData.getEntryNameList()[i]);
-      addOutputNode("Node " + (i+1));
+      addOutputNode(i+1);
     }
   };
   reader.readAsText(file);
+}
+
+function readFileTest(e)
+{
+  var file = e.target.files[0];
+  if (!file)
+  {
+    return;
+  }
+  var reader = new FileReader();
+  var outputData = null;
+  reader.onload = function(e)
+  {
+    var contents = e.target.result;
+    var element = null;
+    outputData = parse(contents);
+
+    console.log(outputData);
+  };
+  reader.readAsText(file);
+}
+
+function createRandomWeight()
+{
+  return Math.random().toFixed(4);
 }
 
 function addEntry(name, weight)
@@ -86,32 +118,79 @@ function addEntry(name, weight)
 
 function addHiddenNode()
 {
-  var weight = Math.random().toFixed(4);
+  var entryWeightElement = "";
+  for( var i = 0; i < _allEntryList.getEntryNameList().length; i++ )
+  {
+    entryWeightElement +=
+    "<form>" +
+      "<div class='input-group'>" +
+        "<span id='name' class='input-group-addon'>W(" + _allEntryList.getEntryNameList()[i] + ")</span>" +
+        "<input id='weight' type='text' class='form-control' value='" + createRandomWeight() + "'>" +
+      "</div>" +
+    "</form>";
+  }
+
+  var hiddenNodeIndex = $("#hidden-layer-list").children().length + 1;
+
   var entryElement =
-  "<div class='col-sm-2'>" +
-  "  <div class='text-center well well-sm form-group'>" +
-  "    <button onclick='removeHiddenNode(this)' type='button' class='close' aria-label='Close'>" +
-  "      <span aria-hidden='true'>&times;</span>" +
-  "    </button>" +
-  "    <h5 id='hidden-node-name'>" + _hiddenNodeIndex + "</h5>" +
-  "    <input id='hidden-node-weigth' style='width: 100%' type='number' name='' value='" + weight + "'>" +
+  "<div class='col-sm-3'>" +
+  "  <div class='text-center well well-sm form-group weight-wrapper'>" +
+  "    <div class='close-button-wrapper'>" +
+  "      <button onclick='removeHiddenNode(this)' type='button' class='close' aria-label='Close'>" +
+  "        <span aria-hidden='true'>&times;</span>" +
+  "      </button>" +
+  "    </div>" +
+  "    <div id='hidden-weight-list'>" +
+         entryWeightElement +
+  "    </div>" +
+  "    <label id='index'>" + hiddenNodeIndex + "</label>" +
   "  </div>" +
   "</div>";
   $("#hidden-layer-list").append(entryElement);
 
-  _hiddenNodeIndex++;
-
-  console.log(getHiddenNodeList());
-  console.log(getOutputNodeList());
+  addOutputWeight();
 }
 
-function addOutputNode(name, weight)
+function addOutputWeight()
+{
+  $("#output-layer-list").html('');
+
+  for( var k = 0; k < _allEntryList.getEntryNameList().length; k++ )
+  {
+    var hiddenElementList = $("#hidden-layer-list").children();
+    var outputWeightElement = "";
+    for( var i = 1; i <= hiddenElementList.length; i++ )
+    {
+      outputWeightElement +=
+      "<form>" +
+        "<div class='input-group'>" +
+          "<span id='name' class='input-group-addon'>W(" + i + ")</span>" +
+          "<input id='weight' type='text' class='form-control' value='" + createRandomWeight() + "'>" +
+        "</div>" +
+      "</form>";
+    }
+
+    var outputElement =
+    "<div class='col-sm-3'>" +
+    "  <div class='text-center well well-sm form-group'>" +
+    "    <div id='output-weight-list'>" + outputWeightElement +
+    "    </div>" +
+    "    <h5 id='output-node-name'>" + k + "</h5>" +
+    "    <input id='output-node-weight' style='width: 100%' type='number' name='' value=''>"
+    "  </div>" +
+    "</div>";
+    $("#output-layer-list").append(outputElement);
+  }
+}
+
+function addOutputNode(name)
 {
   var outputElement =
-  "<div class='col-sm-2'>" +
+  "<div class='col-sm-3'>" +
   "  <div class='text-center well well-sm form-group'>" +
+  "    <div id='output-weight-list'></div>" +
   "    <h5 id='output-node-name'>" + name + "</h5>" +
-  "    <input id='output-node-weight' style='width: 100%' type='number' name='' value='" + weight + "'>"
+  "    <input id='output-node-weight' style='width: 100%' type='number' name='' value=''>"
   "  </div>" +
   "</div>";
   $("#output-layer-list").append(outputElement);
@@ -119,7 +198,15 @@ function addOutputNode(name, weight)
 
 function removeHiddenNode(element)
 {
-  element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
+  element.parentNode.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode.parentNode);
+
+  var hiddenElementList = $("#hidden-layer-list").children();
+  var hiddenNodeList = [];
+  for( var i = 0; i < hiddenElementList.length; i++ )
+  {
+    var indexElement = $($(hiddenElementList[i]).find("#index"));
+    indexElement.text(i+1);
+  }
 }
 
 function parse(contents)
@@ -147,6 +234,7 @@ function parse(contents)
         amountAttributes ++;
       }
     }
+    entryList.splice(entryList.length-1,1);
     entry.setList(entryList);
     allEntryList.push(entry);
 
@@ -212,47 +300,57 @@ function getEntryNodeList()
 
 /*
  * - no parameters.
- * - return dictionary with the structure like '[{ name: nameValue1, weight: weightValue1 }, { name: nameValue2, weight: weightValue2 }, ...]'.
+ * - return dictionary with the structure like
+ * [
+ *  [ 1, 2, 3, 4],
+ *  [ 1, 2, 3, 4],
+ *  [ 1, 2, 3, 4]
+ * ]
  *
  * This function return array of hidden node. Each component has name and your weight.
  */
 function getHiddenNodeList()
 {
-  var hiddelNodeElementList = $("#hidden-layer-list").children();
+  var hiddelElementList = $("#hidden-layer-list").children();
   var hiddenNodeList = [];
-  for( var i = 0; i < hiddelNodeElementList.length; i++ )
+  for( var i = 0; i < hiddelElementList.length; i++ )
   {
-    var hiddenNodeName = $(hiddelNodeElementList[i]).find('#hidden-node-name').text();
-    var hiddenNodeWeigth = $(hiddelNodeElementList[i]).find('#hidden-node-weigth').val();
-    hiddenNodeList.push(
+    var hiddenElement = $(hiddelElementList[i]).find("#hidden-weight-list").children();
+    var weightList = [];
+    for( var j = 0; j < hiddenElement.length; j++ )
     {
-      name: hiddenNodeName,
-      weight: hiddenNodeWeigth
-    });
+      weightList.push($(hiddenElement[j]).find("#weight").val());
+    }
+    hiddenNodeList.push(weightList);
   }
   return hiddenNodeList;
 }
 
 /*
  * - no parameters.
- * - return dictionary with the structure like '[{ name: nameValue1, weight: weightValue1 }, { name: nameValue2, weight: weightValue2 }, ...]'.
+ * - return dictionary with the structure like
+ * - return dictionary with the structure like
+ * [
+ *  [ 1, 2, 3, 4],
+ *  [ 1, 2, 3, 4],
+ *  [ 1, 2, 3, 4]
+ * ]
  *
  * This function return array of output node. Each component has name and your weight.
  */
 function getOutputNodeList()
 {
-  var outputNodeElementList = $("#output-layer-list").children();
+  var outputElementList = $("#output-layer-list").children();
   var outputNodeList = [];
-  for( var i = 0; i < outputNodeElementList.length; i++ )
+  for( var i = 0; i < outputElementList.length; i++ )
   {
-    var outputNodeName = $(outputNodeElementList[i]).find('#output-node-name').text();
-    var outputNodeWeigth = $(outputNodeElementList[i]).find('#output-node-weigth').val();
-
-    outputNodeList.push(
+    var outputElement = $(outputElementList[i]).find("#output-weight-list").children();
+    var weightList = [];
+    for( var j = 0; j < outputElement.length; j++ )
     {
-      name: outputNodeName,
-      weight: outputNodeWeigth
-    });
+      weightList.push($(outputElement[j]).find("#weight").val());
+    }
+    outputNodeList.push(weightList);
   }
   return outputNodeList;
 }

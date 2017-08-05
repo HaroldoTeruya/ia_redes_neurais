@@ -6,6 +6,21 @@
 
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<style>
+			.weight-wrapper
+			{
+				position: relative;
+			}
+			.close-button-wrapper
+			{
+    		position: absolute;
+    		bottom: 0;
+    		margin-bottom: 2px;
+    		right: 0;
+    		margin-right: 10px;
+			}
+		</style>
 	</head>
 
 	<body class="main-body">
@@ -32,9 +47,22 @@
 				</form>
 			</div>
 
+			<hr>
+
 			<div class="">
+				<label for="">Select file for train</label>
 				<input type="file" id="file-input">
 			</div>
+
+			<hr>
+
+			<div class="">
+				<label for="">Select file for test</label>
+				<input type="file" id="file-test">
+				<button id="test-button" type="button" class="btn btn-success" name="button">Test</button>
+			</div>
+
+			<hr>
 
 			<div class="">
 				<h3>Configurations of the data:</h3>
@@ -60,7 +88,8 @@
 							<button onclick="removeHiddenNode(this)" type="button" class="close" aria-label="Close">
   							<span aria-hidden="true">&times;</span>
 							</button>
-							<h5>" + _hiddenNodeIndex + "</h5>
+							<div class="">
+							</div>
 							<input style='width: 100%' type='number' name='' value='" + weight + "'>
 						</div>
 					</div> -->
