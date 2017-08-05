@@ -51,28 +51,29 @@ function readFile(e)
     return;
   }
   var reader = new FileReader();
-  var inputData = null;
+  _inputData = null;
   reader.onload = function(e)
   {
     var contents = e.target.result;
     var element = null;
-    inputData = parse(contents);
-    _allEntryList = inputData;
+    _inputData = parse(contents);
+    _allEntryList = _inputData.getEntryList();
+    console.log(_allEntryList);
 
     $('#entry-list').html('');
     $('#hidden-layer-list').html('');
 
     element = document.getElementById('file-configuration');
     $(element).html('');
-    element.textContent = "Amount of atributes: " + inputData.getAmountAttributes() + "\n" + "Amount of classes: " + inputData.getAmountClasses();
+    element.textContent = "Amount of atributes: " + _inputData.getAmountAttributes() + "\n" + "Amount of classes: " + _inputData.getAmountClasses();
 
     element = document.getElementById('file-content');
     $(element).html('');
     element.textContent = contents;
 
-    for( var i = 0; i < inputData.getEntryNameList().length; i++ )
+    for( var i = 0; i < _inputData.getEntryNameList().length; i++ )
     {
-      addEntry(inputData.getEntryNameList()[i]);
+      addEntry(_inputData.getEntryNameList()[i]);
       addOutputNode(i+1);
     }
   };
@@ -93,8 +94,7 @@ function readFileTest(e)
     var contents = e.target.result;
     var element = null;
     outputData = parse(contents);
-
-    console.log(outputData);
+    _testData = outputData;
   };
   reader.readAsText(file);
 }
@@ -119,12 +119,12 @@ function addEntry(name, weight)
 function addHiddenNode()
 {
   var entryWeightElement = "";
-  for( var i = 0; i < _allEntryList.getEntryNameList().length; i++ )
+  for( var i = 0; i < _inputData.getEntryNameList().length; i++ )
   {
     entryWeightElement +=
     "<form>" +
       "<div class='input-group'>" +
-        "<span id='name' class='input-group-addon'>W(" + _allEntryList.getEntryNameList()[i] + ")</span>" +
+        "<span id='name' class='input-group-addon'>W(" + _inputData.getEntryNameList()[i] + ")</span>" +
         "<input id='weight' type='text' class='form-control' value='" + createRandomWeight() + "'>" +
       "</div>" +
     "</form>";
@@ -155,7 +155,7 @@ function addOutputWeight()
 {
   $("#output-layer-list").html('');
 
-  for( var k = 0; k < _allEntryList.getEntryNameList().length; k++ )
+  for( var k = 0; k < _inputData.getEntryNameList().length; k++ )
   {
     var hiddenElementList = $("#hidden-layer-list").children();
     var outputWeightElement = "";
@@ -207,6 +207,8 @@ function removeHiddenNode(element)
     var indexElement = $($(hiddenElementList[i]).find("#index"));
     indexElement.text(i+1);
   }
+
+  addOutputWeight();
 }
 
 function parse(contents)
